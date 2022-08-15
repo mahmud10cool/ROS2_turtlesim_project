@@ -1,2 +1,2 @@
-# ros_foxy_turtlesim_project
+# ROS Foxy Turtlesim Project
 From the udemy course by Edouard Renard
