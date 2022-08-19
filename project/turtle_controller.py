@@ -77,11 +77,9 @@ class TurtleControllerNode(Node):
 
     def subscriber_callback(self, hello):
         pose = hello
-        x_pose = pose.x
-        y_pose = pose.y
-        theta_pose = pose.theta
-
-        self.get_logger().info(f'The current pose of the robot is (x: {[x_pose]},y: {y_pose},theta: {theta_pose})')
+        self.x_pose = pose.x
+        self.y_pose = pose.y
+        self.theta_pose = pose.theta
 
 
 def main(args=None):
