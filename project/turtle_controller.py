@@ -28,7 +28,7 @@ class TurtleControllerNode(Node):
 
         # Creating a subscriber
         self.pose_subscriber_ = self.create_subscription(
-            Pose, '/turtle1/pose', self.subscriber_callback, 10)
+            Pose, '/turtle1/pose', self.callback_turtle_pose, 10)
         
         # Frequency of the publisher
         timer_period = 0.01
