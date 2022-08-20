@@ -9,7 +9,7 @@ class TurtleSpawner(Node):
     def __init__(self):
         super().__init__('turtle_spawner')
         self.turtle_name_prefix_ = 'turtle'
-        self.turtle_counter_ = 0
+        self.turtle_counter_ = 1
         self.spawn_turtle_timer_ = self.create_timer(2.0, self.spawn_new_turtle)
 
     def spawn_new_turtle(self):
