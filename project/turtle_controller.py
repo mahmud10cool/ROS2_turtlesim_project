@@ -36,12 +36,12 @@ class TurtleControllerNode(Node):
         # Creating the timer
         self.control_loop_timer_ = self.create_timer(timer_period, self.control_loop)
 
+        self.alive_turtles_subscriber_ = self.create_subscription(
+            TurtleArray, "alive_turtles", self.callback_alive_turtles, 10)
+
         # Let us write an intializing message
         self.get_logger().info('The turtle controller has now started')
 
-        self.alive_turtles_subscriber_ = self.create_subscription(
-            Turtle, "alive_turtles", self.callback_alive_turtles, 10)
-        self.control_loop_timer_ = self.create_timer(0.01, self.control_loop)
     
     # Callback function to get the data regarding the pose of the message
     def callback_turtle_pose(self, msg):
@@ -49,7 +49,8 @@ class TurtleControllerNode(Node):
 
     def callback_alive_turtles(self, msg):
         if len(msg.turtles) > 0:
-            self.turtle_to_catch_ = msg.turtles[0]
+            self.turtle_to_catch_ = msg.turtles[1]
+            self.get_logger().info(self.turtle_to_catch_)
     
     def control_loop(self):
         if self.pose_ == None or self.turtle_to_catch_ == None:
