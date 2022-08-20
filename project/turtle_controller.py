@@ -11,14 +11,14 @@ from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose
 # Importing the math module for pythagorean theorem
 import math
-
+# Importing the newly created interface files
+from interfaces_robot.msg import*
 
 class TurtleControllerNode(Node):
     def __init__(self):
         # Naming the node
         super().__init__('turtle_controller')
-        self.target_x = 8.0
-        self.target_y = 4.0
+        self.turtle_to_catch_ = None
 
         # A variable for the pose
         self.pose_ = None
@@ -39,9 +39,18 @@ class TurtleControllerNode(Node):
         # Let us write an intializing message
         self.get_logger().info('The turtle controller has now started')
 
-    def subscriber_callback(self, hello):
-        self.pose_ = hello
+        self.alive_turtles_subscriber_ = self.create_subscription(
+            Turtle, "alive_turtles", self.callback_alive_turtles, 10)
+        self.control_loop_timer_ = self.create_timer(0.01, self.control_loop)
+    
+    # Callback function to get the data regarding the pose of the message
+    def callback_turtle_pose(self, msg):
+        self.pose_ = msg
 
+    def callback_alive_turtles(self, msg):
+        if len(msg.turtles) > 0:
+            self.turtle_to_catch_ = msg.turtles[0]
+    
     def control_loop(self):
         if self.pose_ == None:
             return 

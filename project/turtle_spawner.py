@@ -4,14 +4,24 @@ from rclpy.node import Node
 from turtlesim.srv import Spawn
 from functools import partial
 import math
+from interfaces_robot.msg import*
 
 class TurtleSpawner(Node):
     def __init__(self):
         super().__init__('turtle_spawner')
         self.turtle_name_prefix_ = 'turtle'
         self.turtle_counter_ = 1
-        self.spawn_turtle_timer_ = self.create_timer(2.0, self.spawn_new_turtle)
+        self.alive_turtles_ = []
+        self.alive_turtles_publisher_ = self.create_publisher(
+            TurtleArray, "alive_turtles", 10)
+        self.spawn_turtle_timer_ = self.create_timer(
+            2.0, self.spawn_new_turtle)
 
+    def publish_alive_turtles(self):
+        msg = TurtleArray()
+        msg.turtles = self.alive_turtles_
+        self.alive_turtles_publisher_.publish(msg)
+    
     def spawn_new_turtle(self):
         self.turtle_counter_ += 1
         name = self.turtle_name_prefix_ + str(self.turtle_counter_)
@@ -40,6 +50,12 @@ class TurtleSpawner(Node):
             response = future.result()
             if response.name != '':
                 self.get_logger().info('Turtle '+ response.name + ' is now alive')
+                new_turtle = Turtle()
+                new_turtle.name = response.name
+                new_turtle.x = x
+                new_turtle.y = y
+                self.alive_turtles_.append(new_turtle)
+                self.publish_alive_turtles()
         except Exception as e:
             self.get_logger().error(f"Service call has failed {(e,)}")
 
