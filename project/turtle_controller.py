@@ -52,11 +52,11 @@ class TurtleControllerNode(Node):
             self.turtle_to_catch_ = msg.turtles[0]
     
     def control_loop(self):
-        if self.pose_ == None:
+        if self.pose_ == None or self.turtle_to_catch_ == None:
             return 
 
-        dist_x = self.target_x - self.pose_.x
-        dist_y = self.target_y - self.pose_.y
+        dist_x = self.turtle_to_catch_.x - self.pose_.x
+        dist_y = self.turtle_to_catch_.y - self.pose_.y
 
         distance = math.sqrt(dist_x ** 2 + dist_y ** 2)
 
