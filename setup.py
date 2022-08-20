@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "turtle_controller = project.turtle_controller:main"
+            "turtle_controller = project.turtle_controller:main",
+            "turtle_spawner = project.turtle_spawner:main"
         ],
     },
 )
