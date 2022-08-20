@@ -15,7 +15,7 @@ class TurtleSpawner(Node):
     def spawn_new_turtle(self):
         self.turtle_counter_ += 1
         name = self.turtle_name_prefix_ + str(self.turtle_counter_)
-        x = random.unform(0.0, 11.0)
+        x = random.uniform(0.0, 11.0)
         y = random.uniform(0.0, 11.0)
         theta = random.uniform(0.0, 2*math.pi)
         self.call_spawn_server(name, x, y, theta)
