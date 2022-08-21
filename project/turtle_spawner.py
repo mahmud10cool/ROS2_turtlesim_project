@@ -1,21 +1,33 @@
+# Python modules
 import random
 import rclpy
 from rclpy.node import Node
-from turtlesim.srv import Spawn
 from functools import partial
 import math
+
+# Interface modules
+from turtlesim.srv import Spawn
+from turtlesim.srv import Kill
 from interfaces_robot.msg import*
+from interfaces_robot.srv import*
 
 class TurtleSpawner(Node):
     def __init__(self):
         super().__init__('turtle_spawner')
         self.turtle_name_prefix_ = 'turtle'
-        self.turtle_counter_ = 1
+        self.turtle_counter_ = 0
         self.alive_turtles_ = []
         self.alive_turtles_publisher_ = self.create_publisher(
             TurtleArray, "alive_turtles", 10)
         self.spawn_turtle_timer_ = self.create_timer(
             2.0, self.spawn_new_turtle)
+        self.catch_turtle_service_ = self.create_service(
+            CatchTurtle, 'catch_turtle', self.callback_catch_turtle)
+
+    def callback_catch_turtle(self, request, response):
+        self.call_kill_server(request.name)
+        response.success = True
+        return response
 
     def publish_alive_turtles(self):
         msg = TurtleArray()
@@ -58,6 +70,30 @@ class TurtleSpawner(Node):
                 self.publish_alive_turtles()
         except Exception as e:
             self.get_logger().error(f"Service call has failed {(e,)}")
+
+    def call_kill_server(self, turtle_name):
+        client = self.create_client(Kill, 'kill')
+        while not client.wait_for_service(1.0):
+            self.get_logger().warn("Waiting for Server Kill ...")
+
+        request = Kill.Request()
+        request.name = turtle_name
+
+        future = client.call_async(request)
+        future.add_done_callback(
+            partial(self.callback_call_kill, turtle_name=turtle_name))
+
+    def callback_call_kill(self, future, turtle_name):
+        try:
+            future.result()
+            for (i, turtle) in enumerate(self.alive_turtles_):
+                if turtle.name == turtle_name:
+                    del self.alive_turtles_[i]
+                    self.publish_alive_turtles()
+                    break
+        except Exception as e:
+            self.get_logger().error(f"Service call has failed {(e,)}")
+
 
 def main(args=None):
     rclpy.init(args=args)
