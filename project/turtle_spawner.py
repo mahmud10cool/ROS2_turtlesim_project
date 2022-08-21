@@ -20,7 +20,7 @@ class TurtleSpawner(Node):
         self.alive_turtles_publisher_ = self.create_publisher(
             TurtleArray, "alive_turtles", 10)
         self.spawn_turtle_timer_ = self.create_timer(
-            2.0, self.spawn_new_turtle)
+            0.5, self.spawn_new_turtle)
         self.catch_turtle_service_ = self.create_service(
             CatchTurtle, 'catch_turtle', self.callback_catch_turtle)
 
@@ -61,7 +61,7 @@ class TurtleSpawner(Node):
         try:
             response = future.result()
             if response.name != '':
-                self.get_logger().info('Turtle '+ response.name + ' is now alive')
+                self.get_logger().info(f'Turtle {response.name} is now alive')
                 new_turtle = Turtle()
                 new_turtle.name = response.name
                 new_turtle.x = x
