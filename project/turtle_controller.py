@@ -22,6 +22,10 @@ class TurtleControllerNode(Node):
     def __init__(self):
         # Naming the node
         super().__init__('turtle_controller')
+
+        # Making a parameter on whether to catch the closest turtle or not
+        self.declare_parameter('catch_closest_turtle_first', True)
+
         self.turtle_to_catch_ = None
 
         # Variable to catch closest turtle first
