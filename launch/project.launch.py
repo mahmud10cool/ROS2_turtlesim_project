@@ -20,7 +20,9 @@ def generate_launch_description():
 
     turtle_controller_node = Node(
         package='project',
-        executable='turtle_controller'
+        executable='turtle_controller',
+        parameters=
+        [{'catch_closest_turtle_first': True}]
     )
     
 
