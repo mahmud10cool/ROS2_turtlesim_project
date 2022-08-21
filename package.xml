@@ -11,6 +11,8 @@
 
   <exec_depend>pypack</exec_depend>
   <exec_depend>cpp_pack</exec_depend>
+  <exec_depend>turtlesim</exec_depend>
+  <exec_depend>project</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
