@@ -29,7 +29,8 @@ class TurtleControllerNode(Node):
         self.turtle_to_catch_ = None
 
         # Variable to catch closest turtle first
-        self.catch_closest_turtle_first_ = True
+        self.catch_closest_turtle_first_ = self.get_parameter(
+            'catch_closest_turtle_first').value
 
         # A variable for the pose
         self.pose_ = None
